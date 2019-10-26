@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigationPosts"
+        android:icon="@drawable/ic_description_black_24dp"
+        android:title="Posts" />
+
+    <item
+        android:id="@+id/navigationReport"
+        android:icon="@drawable/ic_report_black_24dp"
+        android:title="Report" />
+
+    <item
+        android:id="@+id/navigationHotspots"
+        android:icon="@drawable/ic_location_on_black_24dp"
+        android:title="Hotspots" />
+
+    <item
+        android:id="@+id/navigationInfo"
+        android:icon="@drawable/ic_live_help_black_24dp"
+        android:title="Info" />
+
+    <item
+        android:id="@+id/navigationMyProfile"
+        android:icon="@drawable/ic_user"
+        android:title="User" />
+
+</menu>
