@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
 
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/map_key"/>
+<!--        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBSzglu-t0tLfl32qovaTJa71x28b0ps94"/>-->
 
         <activity
             android:name="sg.grp4.DengueSG.MainActivity"

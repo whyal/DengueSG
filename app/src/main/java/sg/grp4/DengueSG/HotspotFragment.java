@@ -24,7 +24,6 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback {
     View mView;
 
 
-
     public HotspotFragment() {
 
     }
@@ -60,7 +59,7 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setMapType(googleMap.MAP_TYPE_NORMAL);
 
         googleMap.addMarker(new MarkerOptions().position(new LatLng(1.302870,103.831778)).title("Test").snippet("I love going here"));
-        CameraPosition test = CameraPosition.builder().target(new LatLng(1.302870,103.831778)).zoom(16).zoom(0).bearing(45).build();
+        CameraPosition test = CameraPosition.builder().target(new LatLng(1.302870,103.831778)).zoom(15).bearing(45).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(test));
     }
 }
