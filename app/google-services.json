@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "522418532935",
+    "firebase_url": "https://denguesg-3a171.firebaseio.com",
+    "project_id": "denguesg-3a171",
+    "storage_bucket": "denguesg-3a171.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522418532935:android:87c0a608658169cfdef762",
+        "android_client_info": {
+          "package_name": "sg.grp4.DengueSG"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522418532935-v2gjg9rjumc4lip0t2eke229a3edouh8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sg.grp4.DengueSG",
+            "certificate_hash": "9174e3ac19cfefe19a9adc284fbe925aa71fe9ed"
+          }
+        },
+        {
+          "client_id": "522418532935-ld1kiuqir5g3ae85rajol93pkg72ubgn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5lm32U0OKyQ__EhKqDsbQcsSeFBGrPFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522418532935-ld1kiuqir5g3ae85rajol93pkg72ubgn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
