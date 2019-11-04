@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "522418532935-bg94ksjrblm324tprbnbldh5p7ria2m9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sg.grp4.DengueSG",
+            "certificate_hash": "9967e2246f988e0b185661618b9f89447b7fc391"
+          }
+        },
+        {
           "client_id": "522418532935-v2gjg9rjumc4lip0t2eke229a3edouh8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
