@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,44 +24,32 @@ public class loginActivity extends AppCompatActivity {
     EditText emailInput, passwordInput;
     Button btnLogin;
     TextView tvSignUp;
+    ProgressBar progressBar;
 
     FirebaseAuth mFirebaseAuth;
-
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-
         //findViewById()s
         emailInput = findViewById(R.id.emailL);
         passwordInput = findViewById(R.id.passwordL);
         btnLogin = findViewById(R.id.logInBtn);
         tvSignUp = findViewById(R.id.signUpNavi);
+        progressBar = findViewById(R.id.progressBar);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        progressBar.setVisibility(View.GONE);
 
-                if (mFirebaseUser != null) {
-                    Toast.makeText(loginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(loginActivity.this, MainActivity.class);
-                    startActivity(i);
-                }
-                
-                else {
-                    Toast.makeText(loginActivity.this, "Existing User!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+
                 String email = emailInput.getText().toString();
                 String password = passwordInput.getText().toString();
 
@@ -81,24 +70,21 @@ public class loginActivity extends AppCompatActivity {
                     Toast.makeText(loginActivity.this, "Empty Fields", Toast.LENGTH_SHORT).show();
                 }
 
-                //Validations : Check if email exists in
                 else if (!(email.isEmpty() && password.isEmpty())) {
-                    mFirebaseAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(loginActivity.this, new OnCompleteListener<AuthResult>() {
+                    mFirebaseAuth.signInWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (!task.isSuccessful()) {
-                                        Toast.makeText(loginActivity.this, "Login Error!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        Intent inToMain = new Intent(loginActivity.this, MainActivity.class);
-                                        startActivity(inToMain);
+                                    progressBar.setVisibility(View.GONE);
+
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                    } else {
+                                        Toast.makeText(loginActivity.this, task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
-                }
-                else {
-                    Toast.makeText(loginActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -110,12 +96,5 @@ public class loginActivity extends AppCompatActivity {
                 startActivity(toSignUp);
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-
     }
 }

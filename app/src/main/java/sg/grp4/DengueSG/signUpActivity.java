@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ public class signUpActivity extends AppCompatActivity {
     EditText emailInput, passwordInput;
     Button btnSignUp;
     TextView tvLogin;
+    ProgressBar progressBar;
 
     FirebaseAuth mFirebaseAuth;
 
@@ -29,58 +31,63 @@ public class signUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-
         //findViewById()s
         emailInput = findViewById(R.id.email);
         passwordInput = findViewById(R.id.password);
         btnSignUp = findViewById(R.id.signUpBtn);
         tvLogin = findViewById(R.id.loginNavi);
+        progressBar = findViewById(R.id.progressBar);
 
-        //Once user clicks sign up button
+        progressBar.setVisibility(View.GONE);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailInput.getText().toString();
-                String password = passwordInput.getText().toString();
+
+                progressBar.setVisibility(View.VISIBLE);
+
+                String sUemail = emailInput.getText().toString();
+                String sUpassword = passwordInput.getText().toString();
 
                 //Validations : If email field is empty
-                if (email.isEmpty()) {
+                if (sUemail.isEmpty()) {
                     emailInput.setError("Please fill in your Email");
                     emailInput.requestFocus();
                 }
 
                 //Validations : If password field is empty
-                else if (password.isEmpty()) {
+                else if (sUpassword.isEmpty()) {
                     passwordInput.setError("Please fill in your Password");
                     passwordInput.requestFocus();
                 }
 
                 //Validations : If both fields are empty
-                else if (email.isEmpty() && password.isEmpty()) {
+                else if (sUemail.isEmpty() && sUpassword.isEmpty()) {
                     Toast.makeText(signUpActivity.this, "Empty Fields", Toast.LENGTH_SHORT).show();
                 }
 
-                //Validations : Check if email exists in 
-                else if (!(email.isEmpty() && password.isEmpty())) {
-                    mFirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(signUpActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(signUpActivity.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
-                            }
+                else if (!(sUemail.isEmpty() && sUpassword.isEmpty())) {
+                    mFirebaseAuth.createUserWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressBar.setVisibility(View.GONE);
 
-                            else {
-                                startActivity(new Intent(signUpActivity.this, MainActivity.class));
-                                Toast.makeText(signUpActivity.this, "Successfully Sign Up!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(signUpActivity.this, "Register Successfully",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    else {
+                                        Toast.makeText(signUpActivity.this, task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 }
-                
-                else {
-                    Toast.makeText(signUpActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
 

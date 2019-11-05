@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,8 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserFragment extends Fragment {
 
     Button btnSignOut;
+    TextView user;
     FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    FirebaseUser mFirebaseUser;
 
     @Nullable
     @Override
@@ -27,12 +29,21 @@ public class UserFragment extends Fragment {
         View mView = inflater.inflate(R.layout.fragment_user, container, false);
 
         btnSignOut = mView.findViewById(R.id.signOutBtn);
+        user = mView.findViewById(R.id.userEmail);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        user.setText("Hi, " + mFirebaseUser.getEmail());
+
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Intent inToMain = new Intent(getActivity(), loginActivity.class);
-                startActivity(inToMain);
+                Intent inToWelcome = new Intent(getActivity(), WelcomeActivity.class);
+                inToWelcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                inToWelcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(inToWelcome);
             }
         });
 

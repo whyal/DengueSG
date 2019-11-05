@@ -7,22 +7,22 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".Home"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="DengueSG"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".loginActivity">
-
-        </activity>
-        <activity android:name=".signUpActivity">
-            <!--Uncomment this Chunk below to test the sign-up & login activity-->
-            <!--<intent-filter>
+        <activity android:name=".WelcomeActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
+        <activity android:name=".loginActivity"></activity>
+        <activity android:name=".signUpActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
