@@ -10,32 +10,38 @@
         android:name=".Home"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="DengueSG"
+        android:label="DDengue"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomeActivity">
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <activity
+            android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".loginActivity"></activity>
         <activity android:name=".signUpActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key" /> <!-- <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBSzglu-t0tLfl32qovaTJa71x28b0ps94"/> -->
+
         <activity
             android:name=".MainActivity"
-            android:label="DengueApp"
+            android:label="DDengue"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 
