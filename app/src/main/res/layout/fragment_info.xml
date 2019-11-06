@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/contentBodyColor">
+    android:background="@color/contentBodyColor"
+    tools:context="sg.grp4.DengueSG.InfoFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Info Fragment"
-        android:textSize="30sp"
-        android:textColor="@color/colorAccent"
-        android:layout_centerInParent="true"/>
-
-</RelativeLayout>
+    <ListView
+        android:id="@+id/lv1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>
