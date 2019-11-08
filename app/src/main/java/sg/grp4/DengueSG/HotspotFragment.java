@@ -1,7 +1,13 @@
 package sg.grp4.DengueSG;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -9,11 +15,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -25,9 +36,13 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -35,9 +50,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
-public class HotspotFragment extends Fragment implements OnMapReadyCallback {
+public class HotspotFragment extends Fragment implements OnMapReadyCallback, GeoQueryEventListener {
 
     GoogleMap mGoogleMap;
     MapView mapview;
@@ -46,6 +64,9 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback {
     private LocationCallback locationCallback;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Marker currentUser;
+    private DatabaseReference myLocationRef;
+    private GeoFire geofire;
+    private List<LatLng> dengueLocation;
 
 
     public HotspotFragment() {
@@ -86,11 +107,16 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback {
                             mapview.onResume();
                             mapview.getMapAsync(HotspotFragment.this);
                         }
+
+                        initArea();
+                        setGeoFire();
+
+
                     }
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(getActivity(),"You must enable permission", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(),"You must enable permission", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -107,17 +133,39 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback {
 //        }
     }
 
+    private void initArea() {
+        dengueLocation = new ArrayList<>();
+        dengueLocation.add(new LatLng(1.332214, 103.774380));
+        dengueLocation.add(new LatLng(1.324112, 103.933267));
+        dengueLocation.add(new LatLng(1.290589, 103.845831));
+    }
+
+    private void setGeoFire() {
+
+        myLocationRef = FirebaseDatabase.getInstance().getReference("MyLocation");
+        geofire = new GeoFire(myLocationRef);
+
+    }
+
     private void buildLocationCallback() {
         locationCallback = new LocationCallback(){
             @Override
-            public void onLocationResult(LocationResult locationResult) {
+            public void onLocationResult(final LocationResult locationResult) {
                 if(mGoogleMap != null){
-                    if (currentUser != null) currentUser.remove();
-                    currentUser = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(locationResult.getLastLocation().getLatitude(),
-                            locationResult.getLastLocation().getLongitude())).title("You"));
 
-                    //After adding camera move camera
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 12.0f));
+
+                    geofire.setLocation("You", new GeoLocation(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+                            if (currentUser != null) currentUser.remove();
+                            currentUser = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude())).title("You"));
+
+                            //After adding camera move camera
+                            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 12.0f));
+                        }
+                    });
+
                 }
             }
         };
@@ -150,6 +198,83 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+
+            //add a geo fence for dengue hotspots (circle)
+            for (LatLng latLng : dengueLocation){
+                mGoogleMap.addCircle(new CircleOptions().center(latLng)
+                        .radius(500) //500 M
+                        .strokeColor(Color.RED)
+                        .fillColor(0x220000FF) // 22 means transparent
+                        .strokeWidth(5.0f)
+                );
+
+                // create geoQuery when user is in dangerous location
+                GeoQuery geoQuery = geofire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),5.0f); //500m
+                geoQuery.addGeoQueryEventListener(HotspotFragment.this);
+            }
         }
+    }
+
+    @Override
+    public void onStop() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        super.onStop();
+    }
+
+    @Override
+    public void onKeyEntered(String key, GeoLocation location) {
+        sendNotification("DDENGUE", String.format("%s you have entered a dengue hotspot", key));
+    }
+
+    @Override
+    public void onKeyExited(String key) {
+        sendNotification("DDENGUE", String.format("%s you just left a dengue hotspot", key));
+    }
+
+    @Override
+    public void onKeyMoved(String key, GeoLocation location) {
+        sendNotification("DDENGUE", String.format("%s you are moving within a dengue hotspot", key));
+    }
+
+    @Override
+    public void onGeoQueryReady() {
+
+    }
+
+    @Override
+    public void onGeoQueryError(DatabaseError error) {
+        Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void sendNotification(String title, String content) {
+
+        Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
+        
+        String NOTIFICATION_CHANNEL_ID = "ddengue_multiple_location";
+        NotificationManager notificationManager = (NotificationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+
+            //config
+            notificationChannel.setDescription("Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NOTIFICATION_CHANNEL_ID);
+        builder.setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(false)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+
+        Notification notification = builder.build();
+        notificationManager.notify(new Random().nextInt(),notification);
     }
 }

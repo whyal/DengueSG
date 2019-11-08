@@ -46,10 +46,11 @@ dependencies {
 
     //libraries - geo fencing
     implementation 'com.firebase:geofire-java:3.0.0'
-    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.4'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.karumi:dexter:5.0.0'
 
 }
 //// Google services for jSon file
 //apply plugin: 'com.google.gms.google-services'
+
