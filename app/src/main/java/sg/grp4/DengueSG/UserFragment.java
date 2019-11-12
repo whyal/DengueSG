@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserFragment extends Fragment {
 
-    Button btnSignOut;
-    TextView user;
+    TextView guestTv;
+    Button toLogin, toSignup;
     FirebaseAuth mFirebaseAuth;
     FirebaseUser mFirebaseUser;
 
@@ -27,25 +28,43 @@ public class UserFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_user, container,false);
 
         View mView = inflater.inflate(R.layout.fragment_user, container, false);
-
-        btnSignOut = mView.findViewById(R.id.signOutBtn);
-        user = mView.findViewById(R.id.userEmail);
+        guestTv = mView.findViewById(R.id.guest);
+        toLogin = mView.findViewById(R.id.naviToLogin);
+        toSignup = mView.findViewById(R.id.naviToSignup);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        user.setText("Hi, " + mFirebaseUser.getEmail());
+        if (!(mFirebaseUser != null)) {
 
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent inToWelcome = new Intent(getActivity(), WelcomeActivity.class);
-                inToWelcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                inToWelcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(inToWelcome);
-            }
-        });
+            guestTv.setText("Hello, guest!");
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_layout, this );
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+            toLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), loginActivity.class));
+                }
+            });
+
+            toSignup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), signUpActivity.class));
+                }
+            });
+        }
+
+        else{
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_layout, new UserFragment_User() );
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
         return mView;
     }

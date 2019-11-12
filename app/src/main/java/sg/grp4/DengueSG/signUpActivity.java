@@ -22,7 +22,6 @@ public class signUpActivity extends AppCompatActivity {
     EditText emailInput, passwordInput;
     Button btnSignUp;
     TextView tvLogin;
-    ProgressBar progressBar;
 
     FirebaseAuth mFirebaseAuth;
 
@@ -36,17 +35,12 @@ public class signUpActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.password);
         btnSignUp = findViewById(R.id.signUpBtn);
         tvLogin = findViewById(R.id.loginNavi);
-        progressBar = findViewById(R.id.progressBar);
-
-        progressBar.setVisibility(View.GONE);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                progressBar.setVisibility(View.VISIBLE);
 
                 String sUemail = emailInput.getText().toString();
                 String sUpassword = passwordInput.getText().toString();
@@ -73,7 +67,6 @@ public class signUpActivity extends AppCompatActivity {
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressBar.setVisibility(View.GONE);
 
                                     if (task.isSuccessful()) {
                                         Toast.makeText(signUpActivity.this, "Register Successfully",

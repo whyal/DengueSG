@@ -24,7 +24,6 @@ public class loginActivity extends AppCompatActivity {
     EditText emailInput, passwordInput;
     Button btnLogin;
     TextView tvSignUp;
-    ProgressBar progressBar;
 
     FirebaseAuth mFirebaseAuth;
 
@@ -38,9 +37,6 @@ public class loginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordL);
         btnLogin = findViewById(R.id.logInBtn);
         tvSignUp = findViewById(R.id.signUpNavi);
-        progressBar = findViewById(R.id.progressBar);
-
-        progressBar.setVisibility(View.GONE);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -48,7 +44,6 @@ public class loginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
 
                 String email = emailInput.getText().toString();
                 String password = passwordInput.getText().toString();
@@ -71,11 +66,14 @@ public class loginActivity extends AppCompatActivity {
                 }
 
                 else if (!(email.isEmpty() && password.isEmpty())) {
+
+                    //progressBar.setVisibility(View.VISIBLE);
+
                     mFirebaseAuth.signInWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString())
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressBar.setVisibility(View.GONE);
+                                    //progressBar.setVisibility(View.GONE);
 
                                     if (task.isSuccessful()) {
                                         startActivity(new Intent(loginActivity.this, MainActivity.class));
