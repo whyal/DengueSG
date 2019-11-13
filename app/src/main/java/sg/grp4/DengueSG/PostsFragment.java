@@ -5,15 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +21,6 @@ public class PostsFragment extends Fragment {
 
     FirebaseUser mFirebaseUser;
     FirebaseAuth mFirebaseAuth;
-
 
     private RecyclerView recyclerView;
     private PostAdapter mAdapter;
@@ -55,7 +50,7 @@ public class PostsFragment extends Fragment {
 
         if (mFirebaseUser != null) {
             //continue whatever stuffs in here
-            Toast.makeText(getActivity(), "Nice One", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Community", Toast.LENGTH_SHORT).show();
         }
         else {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -68,25 +63,35 @@ public class PostsFragment extends Fragment {
     private ArrayList<Posts> getMyList() {
         ArrayList<Posts> posts = new ArrayList<>();
 
-        Posts posts1 = new Posts();
-        posts1.setName("John");
-        posts1.setPost("Hey Hey Hey");
-        posts.add(posts1);
+        Posts p = new Posts();
+        p.setName("John");
+        p.setPost("New dengue hotspot around Yishun Area, be careful!");
+        posts.add(p);
 
-        posts1 = new Posts();
-        posts1.setName("Robert");
-        posts1.setPost("Hey Hey ");
-        posts.add(posts1);
+        p = new Posts();
+        p.setName("Robert");
+        p.setPost("There is a high number of people that has gotten Dengue in my neighbourhood");
+        posts.add(p);
 
-        posts1 = new Posts();
-        posts1.setName("Einstein");
-        posts1.setPost("Hey _ Hey");
-        posts.add(posts1);
+        p = new Posts();
+        p.setName("LeKeesha");
+        p.setPost("Hey hey hey");
+        posts.add(p);
 
-        posts1 = new Posts();
-        posts1.setName("Lmao");
-        posts1.setPost("Hey HIgh Hey");
-        posts.add(posts1);
+        p = new Posts();
+        p.setName("Mark");
+        p.setPost("Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text");
+        posts.add(p);
+
+        p = new Posts();
+        p.setName("Tim");
+        p.setPost("Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text");
+        posts.add(p);
+
+        p = new Posts();
+        p.setName("Tyrone");
+        p.setPost("Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text Dummy Text");
+        posts.add(p);
 
         return posts;
     }
