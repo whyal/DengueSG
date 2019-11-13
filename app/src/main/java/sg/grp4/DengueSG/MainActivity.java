@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
-        layoutParams.setBehavior(new BottomNavigationBehavior());
+//        layoutParams.setBehavior(new BottomNavigationBehavior());
 
         bottomNavigationView.setSelectedItemId(R.id.navigationHotspots);
     }
