@@ -26,9 +26,12 @@ public class InfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_info, container,false);
 
         //Items in list
-        final String dengueItems[] = new String[] {"Dengue sucks",
-                "test 2",
-                "test 3"};
+        final String dengueItems[] = new String[] {"About Dengue",
+                "How to prevent Dengue",
+                "Symptoms and Treatment",
+                "Statistics",
+                "DF vs DHF",
+                };
 
         final ListView listView = view.findViewById(R.id.lv1);
         //ArrayAdapter for ListView lv1
