@@ -8,7 +8,8 @@
     tools:context="sg.grp4.DengueSG.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <android.support.constraint.ConstraintLayout
+    <ScrollView
+        android:fillViewport="true"
         android:id="@+id/fragment_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
