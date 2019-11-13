@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -40,9 +41,14 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -55,7 +61,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class HotspotFragment extends Fragment implements OnMapReadyCallback, GeoQueryEventListener {
+import sg.grp4.DengueSG.Interface.IOnloadLocationListener;
+
+public class HotspotFragment extends Fragment implements OnMapReadyCallback, GeoQueryEventListener, IOnloadLocationListener {
 
     GoogleMap mGoogleMap;
     MapView mapview;
@@ -67,7 +75,11 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
     private DatabaseReference myLocationRef;
     private GeoFire geofire;
     private List<LatLng> dengueLocation;
+    private IOnloadLocationListener listener;
 
+    private DatabaseReference singapore;
+    private Location lastLocation;
+    private GeoQuery geoQuery;
 
     public HotspotFragment() {
 
@@ -101,13 +113,6 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
                         buildLocationCallback();
                         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity())); //might cause error
 
-                        mapview = (MapView) mView.findViewById(R.id.map);
-                        if(mapview != null){
-                            mapview.onCreate(null);
-                            mapview.onResume();
-                            mapview.getMapAsync(HotspotFragment.this);
-                        }
-
                         initArea();
                         setGeoFire();
 
@@ -134,10 +139,91 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
     }
 
     private void initArea() {
-        dengueLocation = new ArrayList<>();
-        dengueLocation.add(new LatLng(1.332214, 103.774380));
-        dengueLocation.add(new LatLng(1.324112, 103.933267));
-        dengueLocation.add(new LatLng(1.290589, 103.845831));
+
+        singapore = FirebaseDatabase.getInstance()
+                .getReference("DengueHotspot")
+                .child("Singapore");
+
+        listener = this;
+
+        //Load from Firebase
+//        singapore.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        List<MyLatLng> latLngList = new ArrayList<>();
+//                        for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()){
+//                            MyLatLng latLng = locationSnapshot.getValue(MyLatLng.class);
+//                            latLngList.add(latLng);
+//                        }
+//                        listener.onLoadLocationSuccess(latLngList);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                        listener.onLoadLocationFailed(databaseError.getMessage());
+//                    }
+//                });
+        singapore.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                //update dangerousArea list
+                List<MyLatLng> latLngList = new ArrayList<>();
+                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()){
+                    MyLatLng latLng = locationSnapshot.getValue(MyLatLng.class);
+                    latLngList.add(latLng);
+                }
+
+                listener.onLoadLocationSuccess(latLngList);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+//        dengueLocation = new ArrayList<>();
+//        dengueLocation.add(new LatLng(1.332214, 103.774380));
+//        dengueLocation.add(new LatLng(1.324112, 103.933267));
+//        dengueLocation.add(new LatLng(1.290589, 103.845831));
+
+
+//        // ------ COMMENT AFTER SUBMITTING THIS TO FIREBASE --------
+//        FirebaseDatabase.getInstance()
+//                .getReference("DengueHotspot")
+//                .child("Singapore")
+//                .setValue(dengueLocation)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
+    }
+
+    private void addUserLocation() {
+        geofire.setLocation("You", new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if (currentUser != null) currentUser.remove();
+                currentUser = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(),
+                        lastLocation.getLongitude())).title("You"));
+
+                //After adding camera move camera
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 12.0f));
+            }
+        });
     }
 
     private void setGeoFire() {
@@ -153,18 +239,9 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
             public void onLocationResult(final LocationResult locationResult) {
                 if(mGoogleMap != null){
 
+                    lastLocation = locationResult.getLastLocation();
 
-                    geofire.setLocation("You", new GeoLocation(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
-                        @Override
-                        public void onComplete(String key, DatabaseError error) {
-                            if (currentUser != null) currentUser.remove();
-                            currentUser = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(locationResult.getLastLocation().getLatitude(),
-                                    locationResult.getLastLocation().getLongitude())).title("You"));
-
-                            //After adding camera move camera
-                            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 12.0f));
-                        }
-                    });
+                    addUserLocation();
 
                 }
             }
@@ -200,18 +277,26 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
             fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
 
             //add a geo fence for dengue hotspots (circle)
-            for (LatLng latLng : dengueLocation){
-                mGoogleMap.addCircle(new CircleOptions().center(latLng)
-                        .radius(500) //500 M
-                        .strokeColor(Color.RED)
-                        .fillColor(0x220000FF) // 22 means transparent
-                        .strokeWidth(5.0f)
-                );
+            addDengueHotspot();
+        }
+    }
 
-                // create geoQuery when user is in dangerous location
-                GeoQuery geoQuery = geofire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),5.0f); //500m
-                geoQuery.addGeoQueryEventListener(HotspotFragment.this);
-            }
+    private void addDengueHotspot() {
+        if(geoQuery != null) {
+            geoQuery.removeGeoQueryEventListener(this);
+            geoQuery.removeAllListeners();
+        }
+        for (LatLng latLng : dengueLocation){
+            mGoogleMap.addCircle(new CircleOptions().center(latLng)
+                    .radius(500) //500 M
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.argb(75,242,104,104))
+                    .strokeWidth(5.0f)
+            );
+
+            // create geoQuery when user is in dangerous location
+            GeoQuery geoQuery = geofire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),5.0f); //500m
+            geoQuery.addGeoQueryEventListener(HotspotFragment.this);
         }
     }
 
@@ -276,5 +361,40 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
 
         Notification notification = builder.build();
         notificationManager.notify(new Random().nextInt(),notification);
+    }
+
+    @Override
+    public void onLoadLocationSuccess(List<MyLatLng> latLngs) {
+        dengueLocation = new ArrayList<>();
+        for (MyLatLng myLatLng : latLngs){
+            LatLng convert = new LatLng(myLatLng.getLatitude(),myLatLng.getLongitude());
+            dengueLocation.add(convert);
+        }
+
+        mapview = (MapView) mView.findViewById(R.id.map);
+        if(mapview != null){
+            mapview.onCreate(null);
+            mapview.onResume();
+            mapview.getMapAsync(HotspotFragment.this);
+        }
+
+        //clear map and add again
+        if (mGoogleMap != null){
+
+            mGoogleMap.clear();
+
+            //add user marker
+            addUserLocation();
+
+            //Add Dengue Hotspot Geofence
+            addDengueHotspot();
+
+        }
+
+    }
+
+    @Override
+    public void onLoadLocationFailed(String message) {
+        Toast.makeText(getActivity(), ""+message, Toast.LENGTH_SHORT).show();
     }
 }
