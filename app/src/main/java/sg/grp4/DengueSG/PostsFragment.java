@@ -19,11 +19,11 @@ import java.util.ArrayList;
 
 public class PostsFragment extends Fragment {
 
-    FirebaseUser mFirebaseUser;
-    FirebaseAuth mFirebaseAuth;
-
     private RecyclerView recyclerView;
     private PostAdapter mAdapter;
+
+    FirebaseUser mFirebaseUser;
+    FirebaseAuth mFirebaseAuth;
 
     @Nullable
     @Override

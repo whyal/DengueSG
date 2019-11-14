@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class DetailsFragment extends Fragment {
         title.setText("About Dengue");
         // TextView
         textView = view.findViewById(R.id.textView);
+        textView.setMovementMethod(new ScrollingMovementMethod()); //For scrolling
         textView.setText("Dengue fever is a disease caused by the dengue virus which is transmitted to humans via the bite of an infected mosquito. It is currently widespread in Singapore and in the region of Southeast Asia. The prevalence of the virus is closely tied to the prevalence of the Aedes mosquito.\n" +
                 " \n" +
                 "1.1Biting Behaviour\n" +
