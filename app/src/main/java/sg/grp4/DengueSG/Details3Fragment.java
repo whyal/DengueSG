@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class Details3Fragment extends Fragment {
@@ -16,8 +18,20 @@ public class Details3Fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_details3, container, false);
-        textView = view.findViewById(R.id.textView3 );
+        view = inflater.inflate(R.layout.fragment_details, container, false);
+        Button button = view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, new InfoFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        //TextView
+        textView = view.findViewById(R.id.textView);
         textView.setText("3.     Symptoms and Treatment\n" +
                 " \n" +
                 "Up to 40–80% of all dengue infections are asymptomatic,\n" +
@@ -35,3 +49,4 @@ public class Details3Fragment extends Fragment {
         return view;
     }
 }
+
