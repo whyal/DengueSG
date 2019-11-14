@@ -30,7 +30,9 @@ public class DetailsFragment extends Fragment {
                 transaction.commit();
             }
         });
-
+        //Title TextView
+        TextView title = view.findViewById(R.id.textViewTitle);
+        title.setText("About Dengue");
         // TextView
         textView = view.findViewById(R.id.textView);
         textView.setText("Dengue fever is a disease caused by the dengue virus which is transmitted to humans via the bite of an infected mosquito. It is currently widespread in Singapore and in the region of Southeast Asia. The prevalence of the virus is closely tied to the prevalence of the Aedes mosquito.\n" +
