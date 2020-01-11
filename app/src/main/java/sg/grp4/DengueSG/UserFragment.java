@@ -40,7 +40,7 @@ public class UserFragment extends Fragment {
             guestTv.setText("Hello, guest!");
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_layout, this );
+            transaction.replace(R.id.fragment_layout, this);
             transaction.addToBackStack(null);
             transaction.commit();
 
@@ -57,11 +57,9 @@ public class UserFragment extends Fragment {
                     startActivity(new Intent(getActivity(), signUpActivity.class));
                 }
             });
-        }
-
-        else{
+        } else {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_layout, new UserFragment_User() );
+            transaction.replace(R.id.fragment_layout, new UserFragment_User());
             transaction.addToBackStack(null);
             transaction.commit();
         }
