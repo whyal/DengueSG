@@ -6,8 +6,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -88,7 +91,6 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
     }
 
@@ -172,6 +174,7 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
                 for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()){
                     MyLatLng latLng = locationSnapshot.getValue(MyLatLng.class);
                     latLngList.add(latLng);
+
                 }
 
                 listener.onLoadLocationSuccess(latLngList);
@@ -186,10 +189,18 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
         });
 
 
+
+
+
 //        dengueLocation = new ArrayList<>();
 //        dengueLocation.add(new LatLng(1.332214, 103.774380));
 //        dengueLocation.add(new LatLng(1.324112, 103.933267));
 //        dengueLocation.add(new LatLng(1.290589, 103.845831));
+//        dengueLocation.add(new LatLng(1.372385, 103.957634));
+//        dengueLocation.add(new LatLng(1.356243, 103.960103));
+//        dengueLocation.add(new LatLng(1.340747, 103.949378));
+//        dengueLocation.add(new LatLng(1.333014, 103.948929));
+//        dengueLocation.add(new LatLng(1.333582, 103.944407));
 
 
 //        // ------ COMMENT AFTER SUBMITTING THIS TO FIREBASE --------
@@ -216,9 +227,13 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
         geofire.setLocation("You", new GeoLocation(lastLocation.getLatitude(), lastLocation.getLongitude()), new GeoFire.CompletionListener() {
             @Override
             public void onComplete(String key, DatabaseError error) {
+
+                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.user_location_pic);
+                Bitmap smallMarker = Bitmap.createScaledBitmap(bitmapdraw.getBitmap(), 150, 150, false);
+
                 if (currentUser != null) currentUser.remove();
                 currentUser = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lastLocation.getLatitude(),
-                        lastLocation.getLongitude())).title("You"));
+                        lastLocation.getLongitude())).title("You").icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
 
                 //After adding camera move camera
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 12.0f));
@@ -286,9 +301,11 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
             geoQuery.removeGeoQueryEventListener(this);
             geoQuery.removeAllListeners();
         }
+
+
         for (LatLng latLng : dengueLocation){
             mGoogleMap.addCircle(new CircleOptions().center(latLng)
-                    .radius(500) //500 M
+                    .radius(300) //500 M
                     .strokeColor(Color.RED)
                     .fillColor(Color.argb(75,242,104,104))
                     .strokeWidth(5.0f)
@@ -309,16 +326,22 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
         sendNotification("DDENGUE", String.format("%s you have entered a dengue hotspot", key));
+        Toast.makeText(getActivity(), "onKeyEntered", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onKeyExited(String key) {
         sendNotification("DDENGUE", String.format("%s you just left a dengue hotspot", key));
+        Toast.makeText(getActivity(), "onKeyEntered", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onKeyMoved(String key, GeoLocation location) {
         sendNotification("DDENGUE", String.format("%s you are moving within a dengue hotspot", key));
+        Toast.makeText(getActivity(), "onKeyEntered", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
