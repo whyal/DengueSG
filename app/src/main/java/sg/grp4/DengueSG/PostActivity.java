@@ -149,5 +149,45 @@
         else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
+
+//         if (imgUri != null) {
+//             StorageReference fileReference = srRef.child(System.currentTimeMillis()
+//                     + "." + getFileExtension(imgUri));
+//
+//             mUploadTask = fileReference.putFile(imgUri)
+//                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                         @Override
+//                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                             Handler handler = new Handler();
+//                             handler.postDelayed(new Runnable() {
+//                                 @Override
+//                                 public void run() {
+//                                     progBar.setProgress(0);
+//                                 }
+//                             }, 500);
+//
+//                             Toast.makeText(PostActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
+//                             Post post = new Post(text.getText().toString().trim(),
+//                                     taskSnapshot.getDownloadUrl().toString());
+//                             String uploadId = dbRef.push().getKey();
+//                             dbRef.child(uploadId).setValue(post);
+//                         }
+//                     })
+//                     .addOnFailureListener(new OnFailureListener() {
+//                         @Override
+//                         public void onFailure(@NonNull Exception e) {
+//                             Toast.makeText(PostActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                         }
+//                     })
+//                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                         @Override
+//                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+//                             progBar.setProgress((int) progress);
+//                         }
+//                     });
+//         } else {
+//             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+//         }
      }
 }
