@@ -8,8 +8,8 @@
 
     <item
         android:id="@+id/navigationReport"
-        android:icon="@drawable/ic_report_black_24dp"
-        android:title="Report" />
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
+        android:title="Shop" />
 
     <item
         android:id="@+id/navigationHotspots"

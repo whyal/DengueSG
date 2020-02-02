@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
                     selectedFragment = new UserFragment();
                     break;
                 case R.id.navigationReport:
-                    selectedFragment = new ReportFragment();
+                    selectedFragment = new ShopFragment();
                     break;
                 case R.id.navigationHotspots:
                     selectedFragment = new HotspotFragment();

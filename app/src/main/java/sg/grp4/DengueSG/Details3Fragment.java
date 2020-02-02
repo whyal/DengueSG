@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,22 +31,33 @@ public class Details3Fragment extends Fragment {
                 transaction.commit();
             }
         });
+
+        String titleString = "<h1>Symptoms and Treatment</h1>";
+        TextView title = view.findViewById(R.id.textViewTitle);
+        title.setText(Html.fromHtml(titleString));
+
         //TextView
         textView = view.findViewById(R.id.textView);
-        textView.setText("3.     Symptoms and Treatment\n" +
-                " \n" +
-                "Up to 40–80% of all dengue infections are asymptomatic,\n" +
-                " \n" +
-                "However, if you are showing any of these symptoms:\n" +
-                " \n" +
-                "-        Sudden onset of fever for 2-7 days\n" +
-                "-        Severe headache with pain behind the eyes\n" +
-                "-        Joint and muscle pain\n" +
-                "-        Skin rashes\n" +
-                "-        Nausea and vomiting\n" +
-                "-        Mild bleeding (e.g. nose or gum bleed, or easy bruising of the Symptoms usually appear 4-7 days after being bitten (ranges from 3-14 days).\n" +
-                "Please seek medical attention immediately.\n" +
-                "There is no specific treatment for dengue fever, or its more serious forms. Treatment for dengue is supportive. In more severe cases, you may be hospitalised for aggressive emergency treatment, including fluid and electrolyte replacement, and/or blood transfusions.\n");
+
+        String sourceString =
+                "<b>" + "<h3>Symptoms</h3>" + "</b>"
+                + "Some of the symptoms include : "
+                + "<ul>" +
+                    "<li>Sudden, high fever<li>" +
+                    "<li>Severe headaches<li>" +
+                    "<li>Pain behind the eyes<li>" +
+                    "<li>Severe joint and muscle pain<li>" +
+                    "<li>Fatigue<li>" +
+                    "<li>Nausea<li>" +
+                    "<li>Vomiting<li>" +
+                    "<li>Skin rash, which appears two to five days after the onset of fever.<li>"
+                + "</ul>"
+                + "<b>" + "<h3>Treatment</h3>" + "</b>"
+                + "There is no specific medicine to treat dengue infection. If you think you may have dengue fever, you should use pain relievers with acetaminophen and avoid medicines with aspirin, which could worsen bleeding. You should also rest, drink plenty of fluids, and see your doctor."
+                ;
+
+
+        textView.setText(Html.fromHtml(sourceString));
         return view;
     }
 }

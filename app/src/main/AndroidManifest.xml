@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PostActivity"></activity>
+        <activity android:name=".ShopItemDetails"></activity>
+        <activity android:name=".PostActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -22,7 +23,7 @@
 
         <activity
             android:name=".loginActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".signUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />

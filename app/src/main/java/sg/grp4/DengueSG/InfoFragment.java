@@ -34,6 +34,7 @@ public class InfoFragment extends Fragment {
                 };
 
         final ListView listView = view.findViewById(R.id.lv1);
+        listView.setCacheColorHint(Color.WHITE);
         //ArrayAdapter for ListView lv1
         ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(
                 getActivity(),
