@@ -13,17 +13,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class signUpActivity extends AppCompatActivity {
 
-    EditText emailInput, passwordInput;
-    Button btnSignUp;
-    TextView tvLogin;
+    private String fNameStr, lNameStr, emailStr, passwordStr;
+    private EditText fName, lName, emailInput, passwordInput;
+    private Button btnSignUp;
+    private TextView tvLogin;
 
-    FirebaseAuth mFirebaseAuth;
+    private FirebaseStorage mFirebaseStorage;
+
+    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +41,8 @@ public class signUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         //findViewById()s
+        fName = findViewById(R.id.fName);
+        lName = findViewById(R.id.lName);
         emailInput = findViewById(R.id.email);
         passwordInput = findViewById(R.id.password);
         btnSignUp = findViewById(R.id.signUpBtn);
@@ -42,46 +54,24 @@ public class signUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String sUemail = emailInput.getText().toString();
-                String sUpassword = passwordInput.getText().toString();
+                if(validate()) {
+                    //Upload data to the database
+                    String sUemail = emailInput.getText().toString().trim();
+                    String sUpassword = passwordInput.getText().toString().trim();
 
-                //Validations : If email field is empty
-                if (sUemail.isEmpty()) {
-                    emailInput.setError("Please fill in your Email");
-                    emailInput.requestFocus();
+                    mFirebaseAuth.createUserWithEmailAndPassword(sUemail,sUpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                sendUserData();
+                                Toast.makeText(signUpActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(signUpActivity.this, loginActivity.class));
+                            } else{
+                                Toast.makeText(signUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
-
-                //Validations : If password field is empty
-                else if (sUpassword.isEmpty()) {
-                    passwordInput.setError("Please fill in your Password");
-                    passwordInput.requestFocus();
-                }
-
-                //Validations : If both fields are empty
-                else if (sUemail.isEmpty() && sUpassword.isEmpty()) {
-                    Toast.makeText(signUpActivity.this, "Empty Fields", Toast.LENGTH_SHORT).show();
-                }
-
-                else if (!(sUemail.isEmpty() && sUpassword.isEmpty())) {
-                    mFirebaseAuth.createUserWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString())
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(signUpActivity.this, "Register Successfully",
-                                                Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(signUpActivity.this, loginActivity.class));
-                                    }
-
-                                    else {
-                                        Toast.makeText(signUpActivity.this, task.getException().getMessage(),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-
             }
         });
 
@@ -93,5 +83,29 @@ public class signUpActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private Boolean validate(){
+        Boolean result = false;
+        fNameStr = fName.getText().toString();
+        lNameStr = lName.getText().toString();
+        passwordStr = passwordInput.getText().toString();
+        emailStr = emailInput.getText().toString();
+
+        if(fNameStr.isEmpty() || lNameStr.isEmpty() || passwordStr.isEmpty() || emailStr.isEmpty()){
+            Toast.makeText(this, "Please fill in all the details", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            result = true;
+        }
+        return result;
+    }
+
+    private void sendUserData() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference myref = firebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
+
+        User user = new User(fNameStr,lNameStr, emailStr);
+        myref.setValue(user);
     }
 }
