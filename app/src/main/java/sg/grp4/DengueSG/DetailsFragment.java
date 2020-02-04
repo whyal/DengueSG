@@ -90,7 +90,7 @@ public class DetailsFragment extends Fragment {
 
     public void play(View v) {
         if(player == null) {
-            player = MediaPlayer.create(getActivity(),R.raw.testfile);
+            player = MediaPlayer.create(getActivity(),R.raw.p2_tts_part1);
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -105,6 +105,7 @@ public class DetailsFragment extends Fragment {
         if (player == null) {
             player.pause();
         }
+        player.pause();
     }
 
 
