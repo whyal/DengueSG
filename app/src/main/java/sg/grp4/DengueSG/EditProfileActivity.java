@@ -39,7 +39,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private StorageReference mStorageReference;
-    private FirebaseUser mFirebaseUser;
 
     private static int PICK_IMAGE = 1;
     Uri imagePath;
@@ -109,33 +108,33 @@ public class EditProfileActivity extends AppCompatActivity {
                 User user = new User(fName,lName,em);
                 dbRef.setValue(user);
 
-//                StorageReference imageReference = stRef.child("Users").child(mFirebaseAuth.getUid()).child("Images").child("Profile Pic");//UserID/Images/Profile Pic.jpg
-//                UploadTask uploadTask=imageReference.putFile(imagePath);
-//                uploadTask.addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(EditProfileActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(EditProfileActivity.this, "Upload Successful", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//                finish();
+                StorageReference imageReference = stRef.child("Users").child(mFirebaseAuth.getUid()).child("Images").child("Profile Pic");//UserID/Images/Profile Pic.jpg
+                UploadTask uploadTask=imageReference.putFile(imagePath);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditProfileActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(EditProfileActivity.this, "Upload Successful", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                finish();
 
             }
         });
-//        cProfilePic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent,"Select Image"),PICK_IMAGE);
-//            }
-//        });
+        cProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Image"),PICK_IMAGE);
+            }
+        });
 //
     }
 }
