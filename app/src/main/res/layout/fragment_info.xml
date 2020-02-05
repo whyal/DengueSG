@@ -3,25 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="0dp"
     tools:context="sg.grp4.DengueSG.InfoFragment">
 
     <LinearLayout
-        android:layout_marginTop="50dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:gravity="center"
-            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
             <Button
                 android:id="@+id/aboutButton"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/mosquito"
                 android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/mosquito" />
+
             <TextView
                 android:id="@+id/DengueTextView"
                 android:layout_width="206dp"
@@ -29,13 +33,14 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center"
                 android:text="About"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp" />
 
             <Button
                 android:id="@+id/symptomsButton"
-                android:layout_marginTop="50dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/sad" />
 
             <TextView
@@ -43,16 +48,18 @@
                 android:layout_width="206dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="Symptoms"
                 android:gravity="center"
+                android:text="Symptoms"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp" />
 
             <Button
                 android:id="@+id/preventionButton"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/close"
                 android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_height="100dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/close" />
+
             <TextView
                 android:id="@+id/PreventionTextView"
                 android:layout_width="206dp"
@@ -60,20 +67,23 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center"
                 android:text="Prevention"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:gravity="center"
-            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
             <Button
                 android:id="@+id/statsButton"
-                android:layout_marginTop="50dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/stats" />
 
             <TextView
@@ -83,13 +93,14 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center"
                 android:text="Statistics"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp" />
 
             <Button
                 android:id="@+id/treatmentButton"
-                android:layout_marginTop="50dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/health" />
 
             <TextView
@@ -97,15 +108,16 @@
                 android:layout_width="206dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="Treatment"
                 android:gravity="center"
+                android:text="Treatment"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp" />
 
             <Button
                 android:id="@+id/riskButton"
-                android:layout_marginTop="50dp"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/risk" />
 
             <TextView
@@ -113,8 +125,9 @@
                 android:layout_width="206dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="Risk"
                 android:gravity="center"
+                android:text="Risk"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp" />
         </LinearLayout>
 

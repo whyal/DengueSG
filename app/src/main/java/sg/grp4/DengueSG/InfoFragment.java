@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 public class InfoFragment extends Fragment {
 
-    private Button aboutButton, symptomsButton; //add more variables, just use a coma ","
+    private Button aboutButton, symptomsButton, preventionButton, riskButton, statisticsButton, treatmentButton; //add more variables, just use a coma ","
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -29,7 +29,18 @@ public class InfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_layout, new DetailsFragment() ); //remember to change "DetailsFragment() another fragment name"
+                transaction.replace(R.id.fragment_layout, new DetailsFragment() );
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        preventionButton = (Button)view.findViewById(R.id.preventionButton);
+        preventionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, new Details2Fragment() );
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -40,12 +51,44 @@ public class InfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_layout, new Details3Fragment() ); //remember to change "DetailsFragment() another fragment name"
+                transaction.replace(R.id.fragment_layout, new Details3Fragment() );
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
 
+        treatmentButton = (Button)view.findViewById(R.id.treatmentButton);
+        treatmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, new Details6Fragment() );
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        statisticsButton = (Button)view.findViewById(R.id.statsButton);
+        statisticsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, new Details4Fragment() );
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        riskButton = (Button)view.findViewById(R.id.riskButton);
+        riskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, new Details5Fragment() );
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         return view;
     }
