@@ -1,5 +1,6 @@
 package sg.grp4.DengueSG;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ public class Details5Fragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_details, container, false);
         Button button = view.findViewById(R.id.button);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
