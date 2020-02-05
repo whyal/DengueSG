@@ -5,13 +5,118 @@
     android:layout_height="match_parent"
     tools:context="sg.grp4.DengueSG.InfoFragment">
 
-    <ListView
-        android:id="@+id/lv1"
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:divider="#FFFFFF"
-        android:dividerHeight="1dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textColor="#FFFFFF"></ListView>
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/aboutButton"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/mosquito"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+            <TextView
+                android:id="@+id/DengueTextView"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="About"
+                android:textSize="25sp" />
+
+            <Button
+                android:id="@+id/symptomsButton"
+                android:layout_marginTop="50dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/sad" />
+
+            <TextView
+                android:id="@+id/SymptomsTextView"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Symptoms"
+                android:gravity="center"
+                android:textSize="25sp" />
+
+            <Button
+                android:id="@+id/preventionButton"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/close"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+            <TextView
+                android:id="@+id/PreventionTextView"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="Prevention"
+                android:textSize="25sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/statsButton"
+                android:layout_marginTop="50dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/stats" />
+
+            <TextView
+                android:id="@+id/StatisticsTextView"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="Statistics"
+                android:textSize="25sp" />
+
+            <Button
+                android:id="@+id/treatmentButton"
+                android:layout_marginTop="50dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/health" />
+
+            <TextView
+                android:id="@+id/TreatmentTextView"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Treatment"
+                android:gravity="center"
+                android:textSize="25sp" />
+
+            <Button
+                android:id="@+id/riskButton"
+                android:layout_marginTop="50dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/risk" />
+
+            <TextView
+                android:id="@+id/RiskTextView"
+                android:layout_width="206dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Risk"
+                android:gravity="center"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>
