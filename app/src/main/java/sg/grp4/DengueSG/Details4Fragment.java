@@ -16,14 +16,14 @@ import android.widget.Toast;
 public class Details4Fragment extends Fragment {
     TextView textView;
     View view;
-    MediaPlayer player;
-    Button play, pause;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_details, container, false);
         Button button = view.findViewById(R.id.button);
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

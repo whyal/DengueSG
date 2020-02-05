@@ -87,7 +87,7 @@ public class Details3Fragment extends Fragment {
 
     public void play(View v) {
         if(player == null) {
-            player = MediaPlayer.create(getActivity(),R.raw.p2_tts_symptoms);
+            player = MediaPlayer.create(getActivity(),R.raw.p2_tts_part5symps);
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {

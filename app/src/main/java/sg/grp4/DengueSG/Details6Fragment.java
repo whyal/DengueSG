@@ -76,7 +76,7 @@ public class Details6Fragment extends Fragment {
 
     public void play(View v) {
         if(player == null) {
-            player = MediaPlayer.create(getActivity(),R.raw.p2_tts_treatment);
+            player = MediaPlayer.create(getActivity(),R.raw.p2_tts_part6treat);
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
