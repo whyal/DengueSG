@@ -42,7 +42,7 @@ public class ShopItemDetails extends AppCompatActivity {
         String Title = intent.getExtras().getString("Title");
         String Description = intent.getExtras().getString("Description");
         String Price = intent.getExtras().getString("Price");
-        int image = intent.getExtras().getInt("Thumbnail") ;
+        final int image = intent.getExtras().getInt("Thumbnail") ;
 
         // Setting values
         tvtitle.setText(Title);
@@ -59,9 +59,12 @@ public class ShopItemDetails extends AppCompatActivity {
                 newIntent.putExtra("Title",tvtitle.getText());
                 newIntent.putExtra("Description",tvdescription.getText());
                 newIntent.putExtra("Price",tvprice.getText());
+                newIntent.putExtra("Thumbnail",image);
                 // start the activity
                 ShopItemDetails.this.startActivity(newIntent);
             }
         });
     }
+
+
 }
