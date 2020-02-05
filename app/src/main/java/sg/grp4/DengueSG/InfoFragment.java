@@ -11,81 +11,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class InfoFragment extends Fragment {
 
-    public InfoFragment(){
-
-    }
+    private Button aboutButton, symptomsButton; //add more variables, just use a coma ","
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_info, container,false);
 
-        //Items in list
-        final String dengueItems[] = new String[] {"About Dengue",
-                "How to prevent Dengue",
-                "Symptoms and Treatment",
-                "Statistics",
-                "DF vs DHF",
-        };
-
-        final ListView listView = view.findViewById(R.id.lv1);
-        listView.setCacheColorHint(Color.WHITE);
-        //ArrayAdapter for ListView lv1
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                dengueItems
-        );
-
-        listView.setAdapter(listViewAdapter);
-
-        //Onclicklistener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        aboutButton = (Button)view.findViewById(R.id.aboutButton);
+        aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fragment selectedFragment = null;
-
-                if ( position==0)
-                {
-                    selectedFragment = new DetailsFragment();
-                }
-                else if(position==1) {
-                    selectedFragment = new Details2Fragment();
-                }
-                else if(position==2) {
-                    selectedFragment = new Details3Fragment();
-                }
-                else if(position==3) {
-                    selectedFragment = new Details4Fragment();
-                }
-                else if(position==4) {
-                    selectedFragment = new Details5Fragment();
-                }
-                else if(position==5){
-                    selectedFragment = new Details6Fragment();
-                }
-                else if(position==6){
-                    selectedFragment = new Details7Fragment();
-                }
-                // must be after if statements
+            public void onClick(View view) {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_layout, selectedFragment );
+                transaction.replace(R.id.fragment_layout, new DetailsFragment() ); //remember to change "DetailsFragment() another fragment name"
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
+
+        symptomsButton = (Button)view.findViewById(R.id.symptomsButton);
+        symptomsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_layout, new Details3Fragment() ); //remember to change "DetailsFragment() another fragment name"
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+
         return view;
     }
 
-    @Override
-    public void onClickView(View v) {
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame1, new Details2Fragment());
-        fragmentTransaction.commit();
-    }
 }
