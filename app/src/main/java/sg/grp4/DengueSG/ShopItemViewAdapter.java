@@ -46,6 +46,7 @@ public class ShopItemViewAdapter extends RecyclerView.Adapter<ShopItemViewAdapte
             // passing data to the book activity
             intent.putExtra("Title",mData.get(position).getTitle());
             intent.putExtra("Description",mData.get(position).getDescription());
+            intent.putExtra("Price",mData.get(position).getPrice());
             intent.putExtra("Thumbnail",mData.get(position).getThumbnail());
             // start the activity
             mContext.startActivity(intent);

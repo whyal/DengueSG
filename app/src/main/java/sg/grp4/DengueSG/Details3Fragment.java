@@ -58,7 +58,7 @@ public class Details3Fragment extends Fragment {
             }
         });
 
-        String titleString = "<h1>Symptoms and Treatment</h1>";
+        String titleString = "<h1>Symptoms</h1>";
         TextView title = view.findViewById(R.id.textViewTitle);
         title.setText(Html.fromHtml(titleString));
 
@@ -78,9 +78,7 @@ public class Details3Fragment extends Fragment {
                     "<li>Vomiting<li>" +
                     "<li>Skin rash, which appears two to five days after the onset of fever.<li>"
                 + "</ul>"
-                + "<b>" + "<h3>Treatment</h3>" + "</b>"
-                + "There is no specific medicine to treat dengue infection. If you think you may have dengue fever, you should use pain relievers with acetaminophen and avoid medicines with aspirin, which could worsen bleeding. You should also rest, drink plenty of fluids, and see your doctor."
-                ;
+               ;
 
 
         textView.setText(Html.fromHtml(sourceString));
