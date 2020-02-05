@@ -1,6 +1,8 @@
 package sg.grp4.DengueSG;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,10 +74,11 @@ public class InfoFragment extends Fragment {
         statisticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_layout, new Details4Fragment() );
-                transaction.addToBackStack(null);
-                transaction.commit();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse("https://www.nea.gov.sg/media/news/advisories/index/nea-urges-heightened-vigilance-as-dengue-cases-spike-1-june-2019"));
+                startActivity(intent);
             }
         });
 
