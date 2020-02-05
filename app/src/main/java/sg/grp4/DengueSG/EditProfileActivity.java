@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private EditText cFName, cLName;
+    private EditText cFName, cLName, cEmail;
     private Button btnSave;
     private ImageView cProfilePic;
 
@@ -39,7 +39,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private StorageReference mStorageReference;
-    private FirebaseUser mFirebaseUser;
 
     private static int PICK_IMAGE = 1;
     Uri imagePath;
@@ -65,12 +64,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
         cFName = findViewById(R.id.eFName);
         cLName = findViewById(R.id.eLName);
+        cEmail = findViewById(R.id.eEmail);
         btnSave = findViewById(R.id.saveBtn);
         cProfilePic = findViewById(R.id.profilePic);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
+        mStorageReference= mFirebaseStorage.getReference();
 
         final DatabaseReference dbRef = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
 
@@ -80,6 +81,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 cFName.setText(user.getFirstName());
                 cLName.setText(user.getLastName());
+                cEmail.setText(user.getEmail());
             }
 
             @Override
@@ -101,9 +103,10 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String fName = cFName.getText().toString();
                 String lName = cLName.getText().toString();
+                String em = cEmail.getText().toString();
 
-                //User user = new User(fName,lName);
-                //dbRef.setValue(user);
+                User user = new User(fName,lName,em);
+                dbRef.setValue(user);
 
                 StorageReference imageReference = stRef.child("Users").child(mFirebaseAuth.getUid()).child("Images").child("Profile Pic");//UserID/Images/Profile Pic.jpg
                 UploadTask uploadTask=imageReference.putFile(imagePath);
@@ -132,6 +135,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent,"Select Image"),PICK_IMAGE);
             }
         });
-
+//
     }
 }

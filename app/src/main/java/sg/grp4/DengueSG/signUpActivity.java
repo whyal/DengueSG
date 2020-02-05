@@ -1,6 +1,9 @@
 package sg.grp4.DengueSG;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,16 +28,38 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
+import java.net.URI;
+
 public class signUpActivity extends AppCompatActivity {
 
+    private ImageView profilePicture;
     private String fNameStr, lNameStr, emailStr, passwordStr;
     private EditText fName, lName, emailInput, passwordInput;
     private Button btnSignUp;
     private TextView tvLogin;
 
-    private FirebaseStorage mFirebaseStorage;
+    private static int PICK_IMAGE = 1;
+
+    Uri imagePath;
 
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseStorage mFirebaseStorage;
+    private StorageReference mStorageReference;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == PICK_IMAGE && resultCode == RESULT_OK && data.getData() != null) {
+            imagePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imagePath);
+                profilePicture.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +67,7 @@ public class signUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         //findViewById()s
+        profilePicture = findViewById(R.id.profilePic);
         fName = findViewById(R.id.fName);
         lName = findViewById(R.id.lName);
         emailInput = findViewById(R.id.email);
@@ -49,6 +76,19 @@ public class signUpActivity extends AppCompatActivity {
         tvLogin = findViewById(R.id.loginNavi);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        mStorageReference = mFirebaseStorage.getReference();
+
+
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent selectImage = new Intent();
+                selectImage.setType("image/*");
+                selectImage.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(selectImage, "Select Image"),PICK_IMAGE);
+            }
+        });
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +125,8 @@ public class signUpActivity extends AppCompatActivity {
 
     }
 
-    private Boolean validate(){
+    private Boolean validate() {
+
         Boolean result = false;
         fNameStr = fName.getText().toString();
         lNameStr = lName.getText().toString();
@@ -102,10 +143,24 @@ public class signUpActivity extends AppCompatActivity {
     }
 
     private void sendUserData() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myref = firebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
+
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
+        StorageReference imageReference = mStorageReference.child("Users").child(mFirebaseAuth.getUid()).child("Images").child("Profile Pic");//UserID/Images/Profile Pic.jpg
+        UploadTask uploadTask = imageReference.putFile(imagePath);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(signUpActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(signUpActivity.this, "Upload Successful", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         User user = new User(fNameStr,lNameStr, emailStr);
-        myref.setValue(user);
+        mDatabaseReference.setValue(user);
     }
 }

@@ -47,17 +47,15 @@ public class UserFragment_User extends Fragment {
         btnSignOut = v.findViewById(R.id.signoutBtn);
         btnEdit = v.findViewById(R.id.editBtn);
         nameTv = v.findViewById(R.id.name);
-
-
-
+        
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage= FirebaseStorage.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        DatabaseReference dbRef = mFirebaseDatabase.getReference().child("User View").child(mFirebaseAuth.getUid());
+        DatabaseReference dbRef = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
         StorageReference srRef=mFirebaseStorage.getReference();
-        srRef.child("User View").child(mFirebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        srRef.child("Users").child(mFirebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).fit().centerCrop().into(profilePic); //load image into image view

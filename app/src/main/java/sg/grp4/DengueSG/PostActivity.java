@@ -48,15 +48,18 @@
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
+        //FindViewById(s)
         text = findViewById(R.id.textALL);
         ButtonAdd = findViewById(R.id.publishBtn);
         ButtonChooseOptionForImage = findViewById(R.id.chooseImg);
         progBar = findViewById(R.id.progressBar);
         imgView = findViewById(R.id.chosen_img);
 
+        //Firebase References
         dbRef = FirebaseDatabase.getInstance().getReference("Testing");
         srRef = FirebaseStorage.getInstance().getReference("Testing");
 
+        //OnClickListeners
         ButtonChooseOptionForImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +68,7 @@
             }
         });
 
-
+        //Upload Button
         ButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +81,7 @@
         });
     }
 
+    //Method to pick images from gallery
     public void openFileChooser() {
         Intent i = new Intent();
         i.setType("image/*");
@@ -85,11 +89,13 @@
         startActivityForResult(i, PICK_IMAGE_REQUEST);
     }
 
+    //Method to open the camera
     public void openCamera() {
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(i, 0);
     }
 
+    //
      @Override
      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          super.onActivityResult(requestCode, resultCode, data);
