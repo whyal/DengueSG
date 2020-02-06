@@ -1,20 +1,33 @@
 package sg.grp4.DengueSG;
 
+import android.app.AlarmManager;
+import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity /*implements NavigationView.OnNavigationItemSelectedListener*/ {
 
     private BottomNavigationView bottomNavigationView;
-    private static int SPLASH_TIME_OUT = 2000;
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -50,6 +63,8 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
 
         setContentView(R.layout.activity_main);
 
+        Calendar calendar = Calendar.getInstance();
+
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -58,31 +73,24 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
 
         bottomNavigationView.setSelectedItemId(R.id.navigationHotspots);
 
-        // Splash Screen
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                startActivity(homeIntent);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+        // Daily Notification
 
-        // Splash Screen
-        Thread myThread = new Thread(){
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener(){
             @Override
-            public void run(){
-                try{
-                    sleep(2000);
-                    Intent intent = new Intent(getApplicationContext(), HotspotFragment.class);
-                    startActivity(intent);
-                    finish();
-                } catch (InterruptedException e){
-                    e.printStackTrace();
-                }
+            public void onClick(View view){
+                Calendar calendar = Calendar.getInstance();
+
+                calendar.set(Calendar.HOUR_OF_DAY,7);
+                calendar.set(Calendar.MINUTE,30);
+
+                Intent intent = new Intent(getApplicationContext(), Notification_receiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
             }
-        };
-        myThread.start();
+        });
     }
+
 
 }
