@@ -1,6 +1,9 @@
 package sg.grp4.DengueSG;
 
+import static okhttp3.internal.Internal.instance;
+
 public class User {
+    private  static User instance;
 
     private String firstName, lastName, email;
 
@@ -34,5 +37,11 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public static synchronized User getInstance(){
+        if(instance==null){
+            instance=new User();
+        }
+        return instance;
     }
 }
