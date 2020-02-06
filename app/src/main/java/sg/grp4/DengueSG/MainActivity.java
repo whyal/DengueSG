@@ -58,31 +58,31 @@ public class MainActivity extends AppCompatActivity /*implements NavigationView.
 
         bottomNavigationView.setSelectedItemId(R.id.navigationHotspots);
 
-        // Splash Screen
-        new Handler().postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                startActivity(homeIntent);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+//        // Splash Screen
+//        new Handler().postDelayed(new Runnable(){
+//            @Override
+//            public void run(){
+//                Intent homeIntent = new Intent(MainActivity.this, Home.class);
+//                startActivity(homeIntent);
+//                finish();
+//            }
+//        }, SPLASH_TIME_OUT);
 
         // Splash Screen
-        Thread myThread = new Thread(){
-            @Override
-            public void run(){
-                try{
-                    sleep(2000);
-                    Intent intent = new Intent(getApplicationContext(), HotspotFragment.class);
-                    startActivity(intent);
-                    finish();
-                } catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        myThread.start();
+//        Thread myThread = new Thread(){
+//            @Override
+//            public void run(){
+//                try{
+//                    sleep(2000);
+//                    Intent intent = new Intent(getApplicationContext(), HotspotFragment.class);
+//                    startActivity(intent);
+//                    finish();
+//                } catch (InterruptedException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        myThread.start();
     }
 
 }
