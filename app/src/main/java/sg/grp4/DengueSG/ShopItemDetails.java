@@ -29,8 +29,6 @@ public class ShopItemDetails extends AppCompatActivity {
 
         setContentView(R.layout.activity_shop_item_details);
 
-
-
         tvtitle = (TextView) findViewById(R.id.txttitle);
         tvdescription = (TextView) findViewById(R.id.txtDesc);
         tvprice = (TextView) findViewById(R.id.txtPrice);

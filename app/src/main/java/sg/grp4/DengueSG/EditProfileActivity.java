@@ -1,5 +1,6 @@
 package sg.grp4.DengueSG;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,9 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,17 +34,18 @@ import java.io.IOException;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private EditText cFName, cLName, cEmail;
+    private EditText cFName, cLName;
+    private TextView cEmail;
     private Button btnSave;
     private ImageView cProfilePic;
 
     private FirebaseStorage mFirebaseStorage;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mFirebaseDatabase;
-    private StorageReference mStorageReference;
 
     private static int PICK_IMAGE = 1;
     Uri imagePath;
+    private StorageReference mStorageReference;
 
     @Override
     protected void onActivityResult(int requestCode,int resultCode, Intent data){
@@ -62,23 +66,23 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        cProfilePic = findViewById(R.id.eProfilePic);
         cFName = findViewById(R.id.eFName);
         cLName = findViewById(R.id.eLName);
         cEmail = findViewById(R.id.eEmail);
         btnSave = findViewById(R.id.saveBtn);
-        cProfilePic = findViewById(R.id.profilePic);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
-        mStorageReference= mFirebaseStorage.getReference();
 
-        final DatabaseReference dbRef = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
+        final DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
 
-        dbRef.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+
                 cFName.setText(user.getFirstName());
                 cLName.setText(user.getLastName());
                 cEmail.setText(user.getEmail());
@@ -90,8 +94,8 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        final StorageReference stRef = mFirebaseStorage.getReference();
-        stRef.child("Users").child(mFirebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        final StorageReference mStorageReference = mFirebaseStorage.getReference();
+        mStorageReference.child("Users").child(mFirebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).fit().centerCrop().into(cProfilePic); //load image into image view
@@ -106,9 +110,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 String em = cEmail.getText().toString();
 
                 User user = new User(fName,lName,em);
-                dbRef.setValue(user);
+                mDatabaseReference.setValue(user);
 
-                StorageReference imageReference = stRef.child("Users").child(mFirebaseAuth.getUid()).child("Images").child("Profile Pic");//UserID/Images/Profile Pic.jpg
+                StorageReference imageReference = mStorageReference.child("Users").child(mFirebaseAuth.getUid()).child("Images").child("Profile Pic");//UserID/Images/Profile Pic.jpg
                 UploadTask uploadTask=imageReference.putFile(imagePath);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -126,6 +130,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             }
         });
+
         cProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,6 +140,5 @@ public class EditProfileActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent,"Select Image"),PICK_IMAGE);
             }
         });
-//
     }
 }

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 public class UserFragment_User extends Fragment {
 
@@ -39,30 +43,64 @@ public class UserFragment_User extends Fragment {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
+    private RecyclerView mRecyclerView;
+    private PostAdapter mPostAdapter;
+
+    private DatabaseReference mDatabaseReference;
+    private List<Post> mPosts;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_user, container, false);
 
+        profilePic = v.findViewById(R.id.profilePic);
         btnSignOut = v.findViewById(R.id.signoutBtn);
         btnEdit = v.findViewById(R.id.editBtn);
         nameTv = v.findViewById(R.id.name);
-        
+
+        mRecyclerView = v.findViewById(R.id.myPost);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage= FirebaseStorage.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        DatabaseReference dbRef = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
-        StorageReference srRef=mFirebaseStorage.getReference();
-        srRef.child("Users").child(mFirebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        mPosts = new ArrayList<>();
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Post post = postSnapshot.getValue(Post.class);
+                    mPosts.add(post);
+                }
+
+                mPostAdapter = new PostAdapter(getActivity(), mPosts);
+
+                mRecyclerView.setAdapter(mPostAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference().child("Users").child(mFirebaseAuth.getUid());
+        StorageReference mStorageReference = mFirebaseStorage.getReference();
+        mStorageReference.child("Users").child(mFirebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).fit().centerCrop().into(profilePic); //load image into image view
             }
         });
 
-        dbRef.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);

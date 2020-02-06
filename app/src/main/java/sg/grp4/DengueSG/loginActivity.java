@@ -44,46 +44,7 @@ public class loginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String email = emailInput.getText().toString();
-                String password = passwordInput.getText().toString();
-
-                //Validations : If email field is empty
-                if (email.isEmpty()) {
-                    emailInput.setError("Please fill in your Email");
-                    emailInput.requestFocus();
-                }
-
-                //Validations : If password field is empty
-                else if (password.isEmpty()) {
-                    passwordInput.setError("Please fill in your Password");
-                    passwordInput.requestFocus();
-                }
-
-                //Validations : If both fields are empty
-                else if (email.isEmpty() && password.isEmpty()) {
-                    Toast.makeText(loginActivity.this, "Empty Fields", Toast.LENGTH_SHORT).show();
-                }
-
-                else if (!(email.isEmpty() && password.isEmpty())) {
-
-                    //progressBar.setVisibility(View.VISIBLE);
-
-                    mFirebaseAuth.signInWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString())
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    //progressBar.setVisibility(View.GONE);
-
-                                    if (task.isSuccessful()) {
-                                        startActivity(new Intent(loginActivity.this, MainActivity.class));
-                                    } else {
-                                        Toast.makeText(loginActivity.this, task.getException().getMessage(),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                validate();
             }
         });
 
@@ -94,5 +55,47 @@ public class loginActivity extends AppCompatActivity {
                 startActivity(toSignUp);
             }
         });
+    }
+
+    private void validate() {
+        String email = emailInput.getText().toString();
+        String password = passwordInput.getText().toString();
+
+        //Validations : If email field is empty
+        if (email.isEmpty()) {
+            emailInput.setError("Please fill in your Email");
+            emailInput.requestFocus();
+        }
+
+        //Validations : If password field is empty
+        else if (password.isEmpty()) {
+            passwordInput.setError("Please fill in your Password");
+            passwordInput.requestFocus();
+        }
+
+        //Validations : If both fields are empty
+        else if (email.isEmpty() && password.isEmpty()) {
+            Toast.makeText(loginActivity.this, "Empty Fields", Toast.LENGTH_SHORT).show();
+        }
+
+        else if (!(email.isEmpty() && password.isEmpty())) {
+
+            //progressBar.setVisibility(View.VISIBLE);
+
+            mFirebaseAuth.signInWithEmailAndPassword(emailInput.getText().toString(), passwordInput.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            //progressBar.setVisibility(View.GONE);
+
+                            if (task.isSuccessful()) {
+                                startActivity(new Intent(loginActivity.this, MainActivity.class));
+                            } else {
+                                Toast.makeText(loginActivity.this, task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 }

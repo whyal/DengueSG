@@ -105,6 +105,9 @@ public class HotspotFragment extends Fragment implements OnMapReadyCallback, Geo
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sendNotification("DDENGUE", String.format("%s have entered a dengue hotspot", "You"));
+
+
         Dexter.withActivity(getActivity())
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
