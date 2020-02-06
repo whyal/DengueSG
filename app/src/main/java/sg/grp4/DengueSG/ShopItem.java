@@ -3,14 +3,16 @@ package sg.grp4.DengueSG;
 public class ShopItem {
     private String Title;
     private String Description ;
+    private String Price ;
     private int Thumbnail ;
 
     public ShopItem() {
     }
 
-    public ShopItem(String title, String description, int thumbnail) {
+    public ShopItem(String title, String description, String price, int thumbnail) {
         Title = title;
         Description = description;
+        Price = price;
         Thumbnail = thumbnail;
     }
 
@@ -22,6 +24,8 @@ public class ShopItem {
     public String getDescription() {
         return Description;
     }
+
+    public String getPrice() { return Price; }
 
     public int getThumbnail() {
         return Thumbnail;
