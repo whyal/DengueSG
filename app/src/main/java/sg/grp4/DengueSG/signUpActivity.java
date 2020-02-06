@@ -32,12 +32,14 @@ import java.io.IOException;
 import java.net.URI;
 
 public class signUpActivity extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     private ImageView profilePicture;
     private String fNameStr, lNameStr, emailStr, passwordStr;
     private EditText fName, lName, emailInput, passwordInput;
     private Button btnSignUp;
     private TextView tvLogin;
+User firstName2=User.getInstance();
 
     private static int PICK_IMAGE = 1;
 
@@ -83,10 +85,7 @@ public class signUpActivity extends AppCompatActivity {
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent selectImage = new Intent();
-                selectImage.setType("image/*");
-                selectImage.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(selectImage, "Select Image"),PICK_IMAGE);
+                openFileChooser();
             }
         });
 
@@ -98,6 +97,7 @@ public class signUpActivity extends AppCompatActivity {
                     //Upload data to the database
                     String sUemail = emailInput.getText().toString().trim();
                     String sUpassword = passwordInput.getText().toString().trim();
+                    firstName2.setFirstName(fName.getText().toString());
 
                     mFirebaseAuth.createUserWithEmailAndPassword(sUemail,sUpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -162,5 +162,12 @@ public class signUpActivity extends AppCompatActivity {
 
         User user = new User(fNameStr,lNameStr, emailStr);
         mDatabaseReference.setValue(user);
+    }
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 }
